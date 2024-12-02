@@ -1,0 +1,123 @@
+---
+openapi: 3.0.3
+info:
+  title: Movie API
+  description: Movie Application
+  license:
+    name: MIT
+    url: http://localhost:8080
+  version: 1.0.0
+tags:
+- name: movies
+  description: Movies
+- name: Movie Resource
+  description: Movie REST API
+paths:
+  /movies:
+    get:
+      tags:
+      - Movie Resource
+      summary: Get Movies
+      description: Get all movies inside the list
+      operationId: getMovies
+      responses:
+        "200":
+          description: Movies listed
+          content:
+            application/json: {}
+    post:
+      tags:
+      - Movie Resource
+      summary: Create Movie
+      description: Create a new movie inside the list
+      operationId: createMovie
+      requestBody:
+        description: Movie to create
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Movie"
+        required: true
+      responses:
+        "201":
+          description: Movie created
+          content:
+            application/json: {}
+  /movies/size:
+    get:
+      tags:
+      - Movie Resource
+      summary: Count Movies
+      description: Count all movies inside the list
+      operationId: countMovies
+      responses:
+        "200":
+          description: Movies counted
+          content:
+            text/plain: {}
+  /movies/{id}:
+    put:
+      tags:
+      - Movie Resource
+      summary: Update movie by id
+      description: Update movie by id inside the list
+      operationId: updateMovieById
+      parameters:
+      - name: id
+        in: path
+        description: Movie id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        description: Movie to update
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Movie1"
+        required: true
+      responses:
+        "200":
+          description: Movie updated
+          content:
+            application/json: {}
+    delete:
+      tags:
+      - Movie Resource
+      summary: Delete movie by id
+      description: Delete movie by id inside the list
+      operationId: deleteMovieById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "204":
+          description: Movie deleted
+          content:
+            application/json: {}
+components:
+  schemas:
+    Movie:
+      description: Movie representation
+      required:
+      - title
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        title:
+          type: string
+    Movie1:
+      description: Movie update request representation
+      required:
+      - title
+      type: object
+      properties:
+        title:
+          type: string
