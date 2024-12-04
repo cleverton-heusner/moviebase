@@ -18,6 +18,7 @@ public class MovieRepositoryImplTest extends RepositoryImplTest {
 
     @Test
     void given_movieIsValid_when_movieIsCreated_then_createdMovieIsRetrieved() {
+
         // Arrange
         resetMovieId();
 
@@ -39,6 +40,7 @@ public class MovieRepositoryImplTest extends RepositoryImplTest {
 
     @Test
     void given_movieWithNullTitle_when_movieIsCreated_then_constraintViolationExceptionReturned() {
+
         // Arrange
         final var expectedMovieEntity = Instancio.of(MovieEntity.class)
                 .set(field(MovieEntity::getId), null)
@@ -52,6 +54,7 @@ public class MovieRepositoryImplTest extends RepositoryImplTest {
 
     @Test
     void given_movieWithTitleHavingMoreThan40Characters_when_movieIsCreated_then_dataExceptionReturned() {
+
         // Arrange
         final var expectedMovieEntity = Instancio.of(MovieEntity.class)
                 .set(field(MovieEntity::getId), null)
@@ -66,6 +69,7 @@ public class MovieRepositoryImplTest extends RepositoryImplTest {
 
     @Test
     void given_movieWithNullIsan_when_movieIsCreated_then_constraintViolationExceptionReturned() {
+
         // Arrange
         final var expectedMovieEntity = Instancio.of(MovieEntity.class)
                 .set(field(MovieEntity::getId), null)
@@ -79,6 +83,7 @@ public class MovieRepositoryImplTest extends RepositoryImplTest {
 
     @Test
     void given_movieWithIsanHavingMoreThan26Characters_when_movieIsCreated_then_dataExceptionReturned() {
+
         // Arrange
         final var expectedMovieEntity = Instancio.of(MovieEntity.class)
                 .set(field(MovieEntity::getId), null)
