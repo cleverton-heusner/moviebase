@@ -8,6 +8,7 @@ import cleverton.heusner.adapter.input.dto.response.MovieResponse;
 import cleverton.heusner.adapter.input.dto.response.MovieWithRatingsResponse;
 import cleverton.heusner.domain.model.Movie;
 import cleverton.heusner.port.input.service.MovieService;
+import cleverton.heusner.port.shared.LoggerService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
@@ -37,6 +38,7 @@ public class MovieResource {
     private final MovieWithRatingsResponseMapper movieWithRatingsResponseMapper;
     private final MovieRatingRequestMapper movieRatingRequestMapper;
     private final MovieWithRatingResponseMapper movieWithRatingResponseMapper;
+    private final LoggerService logger;
 
     public MovieResource(final MovieService movieService,
                          final MovieCreationRequestMapper movieCreationRequestMapper,
@@ -44,7 +46,8 @@ public class MovieResource {
                          final MovieResponseMapper movieResponseMapper,
                          final MovieWithRatingsResponseMapper movieWithRatingsResponseMapper,
                          final MovieRatingRequestMapper movieRatingRequestMapper,
-                         final MovieWithRatingResponseMapper movieWithRatingResponseMapper) {
+                         final MovieWithRatingResponseMapper movieWithRatingResponseMapper,
+                         final LoggerService logger) {
         this.movieService = movieService;
         this.movieCreationRequestMapper = movieCreationRequestMapper;
         this.movieUpdateRequestMapper = movieUpdateRequestMapper;
@@ -52,6 +55,7 @@ public class MovieResource {
         this.movieWithRatingsResponseMapper = movieWithRatingsResponseMapper;
         this.movieRatingRequestMapper = movieRatingRequestMapper;
         this.movieWithRatingResponseMapper = movieWithRatingResponseMapper;
+        this.logger = logger;
     }
 
     @GET
@@ -71,6 +75,7 @@ public class MovieResource {
                 .stream()
                 .map(movieResponseMapper::toResponse)
                 .toList();
+        logger.info("All movies created listed successfully.");
         return Response.ok(movies).build();
     }
 
@@ -100,6 +105,7 @@ public class MovieResource {
         final Movie movie = movieService.getRatingsById(movieId);
         final MovieWithRatingsResponse movieWithRatings = movieWithRatingsResponseMapper.toResponse(movie);
 
+        logger.info("Ratings of movie retrieved by ID '%' successfully.", movieId);
         return Response.ok(movieWithRatings).build();
     }
 
@@ -140,6 +146,7 @@ public class MovieResource {
         final Movie movieToRate = movieRatingRequestMapper.toModel(movieRatingRequest);
         final Movie ratedMovie = movieService.rateById(movieId, movieToRate);
 
+        logger.info("Movie rated by ID '%' with value '%' successfully.", movieId, movieRatingRequest.rating());
         return Response.ok(movieWithRatingResponseMapper.toResponse(ratedMovie)).build();
     }
 
@@ -157,6 +164,7 @@ public class MovieResource {
             content = @Content(mediaType = TEXT_PLAIN)
     )
     public Response countMovies() {
+        logger.info("All movies counted successfully.");
         return Response.ok(movieService.countMovies()).build();
     }
 
@@ -185,6 +193,11 @@ public class MovieResource {
         final Movie movieToCreate = movieCreationRequestMapper.toModel(movieCreationRequest);
         final Movie createdMovie = movieService.create(movieToCreate);
 
+        logger.info(
+                "Movie with title '%' and ISAN '%' created successfully.",
+                createdMovie.getTitle(),
+                createdMovie.getIsan()
+        );
         return Response.status(CREATED)
                 .entity(movieResponseMapper.toResponse(createdMovie))
                 .build();
@@ -227,6 +240,7 @@ public class MovieResource {
         final Movie movieToUpdate = movieUpdateRequestMapper.toModel(movieUpdateRequest);
         final Movie updatedMovie = movieService.updateById(movieId, movieToUpdate);
 
+        logger.info("Movie updated by ID '%' successfully.", updatedMovie.getId());
         return Response.ok(movieResponseMapper.toResponse(updatedMovie)).build();
     }
 
@@ -254,6 +268,7 @@ public class MovieResource {
             final Long movieId) {
 
         movieService.deleteById(movieId);
+        logger.info("Movie deleted by ID '%' successfully.", movieId);
         return Response.noContent().build();
     }
 }

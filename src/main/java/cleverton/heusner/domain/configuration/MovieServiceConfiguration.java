@@ -1,11 +1,12 @@
 package cleverton.heusner.domain.configuration;
 
-import cleverton.heusner.port.output.MessageProvider;
 import cleverton.heusner.domain.service.MovieServiceImpl;
 import cleverton.heusner.port.input.service.MovieProvider;
 import cleverton.heusner.port.input.service.MovieService;
 import cleverton.heusner.port.output.AppInfoProvider;
+import cleverton.heusner.port.output.MessageProvider;
 import cleverton.heusner.port.output.MovieRatingProvider;
+import cleverton.heusner.port.shared.LoggerService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Produces;
@@ -18,7 +19,8 @@ public class MovieServiceConfiguration {
     public MovieService movieService(final MovieProvider movieProvider,
                                      final MovieRatingProvider movieRatingProvider,
                                      final AppInfoProvider appInfoProvider,
-                                     final MessageProvider messageProvider) {
-        return new MovieServiceImpl(movieProvider, movieRatingProvider, appInfoProvider, messageProvider);
+                                     final MessageProvider messageProvider,
+                                     final LoggerService loggerService) {
+        return new MovieServiceImpl(movieProvider, movieRatingProvider, appInfoProvider, messageProvider, loggerService);
     }
 }

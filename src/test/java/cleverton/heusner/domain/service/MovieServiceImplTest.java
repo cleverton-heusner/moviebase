@@ -1,7 +1,8 @@
 package cleverton.heusner.domain.service;
 
-import cleverton.heusner.adapter.output.provider.MovieProviderImpl;
 import cleverton.heusner.domain.model.Movie;
+import cleverton.heusner.port.input.service.MovieProvider;
+import cleverton.heusner.port.shared.LoggerService;
 import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.Test;
@@ -14,14 +15,18 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MovieServiceImplTest {
 
     @Mock
-    private MovieProviderImpl movieProvider;
+    private MovieProvider movieProvider;
+
+    @Mock
+    private LoggerService logger;
 
     @InjectMocks
     private MovieServiceImpl movieService;
@@ -43,6 +48,7 @@ public class MovieServiceImplTest {
 
         when(movieProvider.findByIsan(movieToCreate.getIsan())).thenReturn(Optional.empty());
         when(movieProvider.create(movieToCreate)).thenReturn(expectedCreatedMovie);
+        doNothing().when(logger).info(anyString(), any(Object[].class));
 
         // Act
         final Movie actualCreatedMovie = movieService.create(movieToCreate);
@@ -52,5 +58,7 @@ public class MovieServiceImplTest {
 
         verify(movieProvider).findByIsan(movieToCreate.getIsan());
         verify(movieProvider).create(movieToCreate);
+        verify(logger, times(3)).info(anyString(), any(Object[].class));
+        verify(logger, never()).warn(anyString(), any(Object[].class));
     }
 }

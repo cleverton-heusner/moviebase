@@ -42,6 +42,16 @@ public class Movie {
         this.updateDateTime = updateDateTime;
     }
 
+    public Movie createdAtNow() {
+        creationDateTime = LocalDateTime.now();
+        return this;
+    }
+
+    public Movie updatedAtNow() {
+        updateDateTime = LocalDateTime.now();
+        return this;
+    }
+
     public boolean isReleaseYearInFuture() {
         return releaseYear > LocalDate.now().getYear();
     }
@@ -50,7 +60,7 @@ public class Movie {
         return releaseYear < FIRST_MOVIE_YEAR;
     }
 
-    public void calculateRatingsAverage() {
+    public Movie withRatingsAverage() {
         if (rating != null) {
             ratings.add(rating);
         }
@@ -63,6 +73,17 @@ public class Movie {
                 )
                 .setScale(1, FLOOR)
                 .doubleValue();
+        return this;
+    }
+
+    public Movie withRatings(final List<Rating> ratings) {
+        this.ratings = ratings;
+        return this;
+    }
+
+    public Movie withRating(final Rating rating) {
+        this.rating = rating;
+        return this;
     }
 
     public Long getId() {
@@ -261,6 +282,13 @@ public class Movie {
 
         private String source;
         private Double value;
+
+        public Rating() {}
+
+        public Rating(String source, Double value) {
+            this.source = source;
+            this.value = value;
+        }
 
         public String getSource() {
             return source;
