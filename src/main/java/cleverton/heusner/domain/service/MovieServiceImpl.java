@@ -117,7 +117,8 @@ public class MovieServiceImpl implements MovieService {
         logger.info("Validating release year '%' of movie with ID '%'.", movie.getReleaseYear(), movie.getId());
         if (movie.isReleaseYearInFuture()) {
             logger.warn(
-                    "Cannot '%' movie with ID '%' and release year '%'. Reason: release year cannot be in the future.",
+                    "Cannot '%' movie with ID '%' and release year '%'. Reason: release year cannot be in " +
+                            "the future.",
                     operation.getValue(),
                     movie.getId(),
                     movie.getReleaseYear()
@@ -127,7 +128,8 @@ public class MovieServiceImpl implements MovieService {
 
         if (movie.isReleaseYearBeforeFirstMovieYear()) {
             logger.warn(
-                    "Cannot '%' movie with ID '%' and release year '%'. Reason: release year cannot be before 1888.",
+                    "Cannot '%' movie with ID '%' and release year '%'. Reason: release year cannot be " +
+                            "before 1888.",
                     operation.getValue(),
                     movie.getId(),
                     movie.getReleaseYear()
