@@ -8,6 +8,7 @@ import org.hibernate.exception.DataException;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 
+import static cleverton.heusner.port.output.MovieRepository.ID_FIELD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.instancio.Select.field;
@@ -33,7 +34,7 @@ public class MovieRepositoryImplTest extends RepositoryImplTest {
         // Assert
         final MovieEntity actualMovieEntity = datasetManager.findById(expectedMovieId);
         assertThat(actualMovieEntity).usingRecursiveComparison()
-                .ignoringFields("id")
+                .ignoringFields(ID_FIELD)
                 .isEqualTo(expectedMovieEntity);
         assertThat(actualMovieEntity.getId()).isEqualTo(expectedMovieId);
     }

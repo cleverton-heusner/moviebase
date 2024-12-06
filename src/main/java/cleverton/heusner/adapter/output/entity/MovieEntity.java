@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+import static cleverton.heusner.shared.constant.validation.MovieValidation.ISAN_SIZE;
+import static cleverton.heusner.shared.constant.validation.MovieValidation.TITLE_MAX_SIZE;
+
 @Data
 @Entity
 @Table(name = "movie")
@@ -14,10 +17,10 @@ public class MovieEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @Column(name = "title", nullable = false, length = 40)
+    @Column(name = "title", nullable = false, length = TITLE_MAX_SIZE)
     private String title;
 
-    @Column(name = "isan", nullable = false, length = 26, unique = true)
+    @Column(name = "isan", nullable = false, length = ISAN_SIZE, unique = true)
     private String isan;
 
     @Column(name = "release_year")
