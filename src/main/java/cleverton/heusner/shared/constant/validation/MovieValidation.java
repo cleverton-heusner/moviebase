@@ -1,5 +1,10 @@
 package cleverton.heusner.shared.constant.validation;
 
+import lombok.NoArgsConstructor;
+
+import static lombok.AccessLevel.PRIVATE;
+
+@NoArgsConstructor(access = PRIVATE)
 public class MovieValidation {
 
     public static final byte ISAN_SIZE = 26;
