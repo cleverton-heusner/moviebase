@@ -53,12 +53,13 @@ public class MovieRepositoryImplTest extends RepositoryImplTest {
     }
 
     @Test
-    void given_movieWithTitleHavingMoreThan40Characters_when_movieIsCreated_then_dataExceptionReturned() {
+    void given_movieWithOverSizedTitle_when_movieIsCreated_then_dataExceptionReturned() {
+        final String overSizedIsan = "a".repeat(41);
 
         // Arrange
         final var expectedMovieEntity = Instancio.of(MovieEntity.class)
                 .set(field(MovieEntity::getId), null)
-                .set(field(MovieEntity::getTitle), "a".repeat(41))
+                .set(field(MovieEntity::getTitle), overSizedIsan)
                 .create();
 
         // Act & Assert
@@ -82,12 +83,13 @@ public class MovieRepositoryImplTest extends RepositoryImplTest {
     }
 
     @Test
-    void given_movieWithIsanHavingMoreThan26Characters_when_movieIsCreated_then_dataExceptionReturned() {
+    void given_movieWithOverSizedIsan_when_movieIsCreated_then_dataExceptionReturned() {
+        final String overSizedIsan = "a".repeat(27);
 
         // Arrange
         final var expectedMovieEntity = Instancio.of(MovieEntity.class)
                 .set(field(MovieEntity::getId), null)
-                .set(field(MovieEntity::getIsan), "a".repeat(27))
+                .set(field(MovieEntity::getIsan), overSizedIsan)
                 .create();
 
         // Act & Assert

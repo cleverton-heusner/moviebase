@@ -278,11 +278,11 @@ public class MovieResourceTest extends ResourceTest {
 
     @Test
     @Tag("create_movie")
-    void given_movieWithIsanHavingLessThan26Characters_when_movieIsCreated_then_badRequestResponseReturned() {
+    void given_movieWithUndersizedIsan_when_movieIsCreated_then_badRequestResponseReturned() {
 
         // Arrange
-        final String isanWithLessThan26Characters = "000000002A560000Y00000000";
-        final var movieWithInvalidIsan = createMovieCreationRequest(isanWithLessThan26Characters);
+        final String undersizedIsan = "000000002A560000Y00000000";
+        final var movieWithInvalidIsan = createMovieCreationRequest(undersizedIsan);
         final var expectedErrorResponse = createBadRequestErrorResponse(
                 "createMovie.movieCreationRequest.isan: ISAN deve ter '26' caracteres."
         );
@@ -305,11 +305,11 @@ public class MovieResourceTest extends ResourceTest {
 
     @Test
     @Tag("create_movie")
-    void given_movieWithIsanHavingMoreThan26Characters_when_movieIsCreated_then_badRequestResponseReturned() {
+    void given_movieWithOverSizedIsan_when_movieIsCreated_then_badRequestResponseReturned() {
 
         // Arrange
-        final String isanWithMoreThan26Characters = "000000002A560000Y0000000022";
-        final var movieWithInvalidIsan = createMovieCreationRequest(isanWithMoreThan26Characters);
+        final String overSizedIsan = "000000002A560000Y0000000022";
+        final var movieWithInvalidIsan = createMovieCreationRequest(overSizedIsan);
         final var expectedErrorResponse = createBadRequestErrorResponse(
                 "createMovie.movieCreationRequest.isan: ISAN deve ter '26' caracteres."
         );
