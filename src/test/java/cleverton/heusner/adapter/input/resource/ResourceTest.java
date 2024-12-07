@@ -25,7 +25,7 @@ public class ResourceTest {
     protected WireMock wiremock;
 
     @Inject
-    private DatasetManager<MovieEntity> datasetManager;
+    private DatasetManager datasetManager;
 
     @AfterEach
     void tearDown() {

@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 public class DatasetManagerConfiguration<MovieEntity> {
 
     @Produces
-    public DatasetManager<MovieEntity> dataSource(final DataSource dataSource) {
-        return new DatasetManager<>(dataSource);
+    public DatasetManager dataSource(final DataSource dataSource) {
+        return new DatasetManager(dataSource);
     }
 }

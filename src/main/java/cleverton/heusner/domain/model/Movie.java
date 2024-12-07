@@ -163,30 +163,12 @@ public class Movie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Movie movie = (Movie) o;
-        return releaseYear == movie.releaseYear &&
-                Double.compare(ratingsAverage, movie.ratingsAverage) == 0 &&
-                Objects.equals(id, movie.id) &&
-                Objects.equals(isan, movie.isan) &&
-                Objects.equals(title, movie.title) &&
-                Objects.equals(rating, movie.rating) &&
-                Objects.equals(ratings, movie.ratings) &&
-                Objects.equals(creationDateTime, movie.creationDateTime) &&
-                Objects.equals(updateDateTime, movie.updateDateTime);
+        return Objects.equals(id, movie.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                id,
-                isan,
-                title,
-                releaseYear,
-                rating,
-                ratings,
-                ratingsAverage,
-                creationDateTime,
-                updateDateTime
-        );
+        return Objects.hashCode(id);
     }
 
     @Override
