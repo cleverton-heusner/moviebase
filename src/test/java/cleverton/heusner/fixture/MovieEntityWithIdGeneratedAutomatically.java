@@ -9,16 +9,16 @@ import java.time.LocalDateTime;
 
 import static cleverton.heusner.shared.constant.validation.MovieValidation.ISAN_SIZE;
 import static cleverton.heusner.shared.constant.validation.MovieValidation.TITLE_MAX_SIZE;
-import static jakarta.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.AUTO;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
 @Entity
-@Table(name = "movie_entity_with_transient_annotation")
-public class MovieEntityMockWithTransientAnnotation extends PanacheEntityBase {
+@Table(name = "movie_entity_with_id_generated_automatically")
+public class MovieEntityWithIdGeneratedAutomatically extends PanacheEntityBase {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = AUTO, generator = "auto_id_generator")
     public Long id;
 
     @Column(name = "title", nullable = false, length = TITLE_MAX_SIZE)
@@ -26,9 +26,6 @@ public class MovieEntityMockWithTransientAnnotation extends PanacheEntityBase {
 
     @Column(name = "isan", nullable = false, length = ISAN_SIZE, unique = true)
     private String isan;
-
-    @Transient
-    private String genre;
 
     @Column(name = "release_year")
     private Integer releaseYear;

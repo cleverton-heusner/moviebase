@@ -11,8 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static jakarta.persistence.GenerationType.SEQUENCE;
-import static jakarta.persistence.GenerationType.TABLE;
+import static jakarta.persistence.GenerationType.*;
 
 public class DatasetManager {
 
@@ -67,9 +66,9 @@ public class DatasetManager {
         IntStream.range(0, fieldsMappedToColumns.size())
                 .forEach(i -> {
                     final Field field = fieldsMappedToColumns.get(i);
-                    final long sequence = generateSequenceForIdField(field, connection);
+                    final long id = generateId(field, connection);
                     try {
-                        statement.setObject(++i, sequence > 0 ? sequence : getFieldValue(field, entity));
+                        statement.setObject(++i, id > 0 ? id : getFieldValue(field, entity));
                     }
                     catch (final SQLException e) {
                         throw new RuntimeException(String.format(
@@ -94,8 +93,9 @@ public class DatasetManager {
         return Arrays.stream(entityClass.getDeclaredFields())
                 .filter(field ->
                         isFieldAnnotatedWithColumn(field) ||
-                        isIdFieldGeneratedBySequence(field) ||
-                        isIdFieldGeneratedByTable(field) ||
+                        isIdGeneratedBySequence(field) ||
+                        isIdGeneratedAutomatically(field) ||
+                        isIdGeneratedByTable(field) ||
                         isFieldNotAnnotated(field)
                 );
     }
@@ -104,7 +104,7 @@ public class DatasetManager {
         return field.isAnnotationPresent(Column.class);
     }
 
-    private boolean isIdFieldGeneratedBySequence(final Field field) {
+    private boolean isIdGeneratedBySequence(final Field field) {
         return field.isAnnotationPresent(GeneratedValue.class) &&
                 SEQUENCE.name()
                         .equals(
@@ -114,7 +114,17 @@ public class DatasetManager {
                         );
     }
 
-    private boolean isIdFieldGeneratedByTable(final Field field) {
+    private boolean isIdGeneratedAutomatically(final Field field) {
+        return field.isAnnotationPresent(GeneratedValue.class) &&
+                AUTO.name()
+                        .equals(
+                                field.getAnnotation(GeneratedValue.class)
+                                        .strategy()
+                                        .name()
+                        );
+    }
+
+    private boolean isIdGeneratedByTable(final Field field) {
         return field.isAnnotationPresent(GeneratedValue.class) &&
                 TABLE.name()
                         .equals(
@@ -182,8 +192,8 @@ public class DatasetManager {
         }
     }
 
-    private long generateSequenceForIdField(final Field field, final Connection connection) {
-        if (isIdFieldGeneratedBySequence(field)) {
+    private long generateId(final Field field, final Connection connection) {
+        if (isIdGeneratedBySequence(field) || isIdGeneratedAutomatically(field)) {
             final String idGeneratorSequence = field.getAnnotation(GeneratedValue.class)
                     .generator();
             try (final Statement statement = connection.createStatement()) {
@@ -198,7 +208,7 @@ public class DatasetManager {
                 );
             }
         }
-        else if (isIdFieldGeneratedByTable(field)) {
+        else if (isIdGeneratedByTable(field)) {
             final String idGeneratorTable = field.getAnnotation(GeneratedValue.class).generator();
             final String entityPkColumnName = field.getAnnotation(TableGenerator.class).pkColumnName();
             final String currentIdColumnName = field.getAnnotation(TableGenerator.class).valueColumnName();

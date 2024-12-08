@@ -14,7 +14,8 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @Entity
-public class MovieEntityMockWithoutTableAnnotation extends PanacheEntityBase {
+@Table(name = "movie_entity_with_transient_annotation")
+public class MovieEntityWithTransientAnnotation extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -25,6 +26,9 @@ public class MovieEntityMockWithoutTableAnnotation extends PanacheEntityBase {
 
     @Column(name = "isan", nullable = false, length = ISAN_SIZE, unique = true)
     private String isan;
+
+    @Transient
+    private String genre;
 
     @Column(name = "release_year")
     private Integer releaseYear;

@@ -15,7 +15,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @Table(name = "movie_entity_with_column_annotation")
-public class MovieEntityMockWithColumnAnnotation extends PanacheEntityBase {
+public class MovieEntityWithColumnAnnotation extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

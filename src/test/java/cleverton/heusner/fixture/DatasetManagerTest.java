@@ -21,8 +21,8 @@ public class DatasetManagerTest {
 
     @AfterEach
     void tearDown() {
-        datasetManager.clean(MovieEntityMockWithColumnAnnotation.class);
-        datasetManager.clean(MovieEntityMockWithoutColumnAnnotation.class);
+        datasetManager.clean(MovieEntityWithColumnAnnotation.class);
+        datasetManager.clean(MovieEntityWithoutColumnAnnotation.class);
     }
 
     @Test
@@ -30,10 +30,10 @@ public class DatasetManagerTest {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
-        final var expectedMovieDataset = Instancio.of(MovieEntityMockWithColumnAnnotation.class)
-                .set(field(MovieEntityMockWithColumnAnnotation::getId), null)
-                .set(field(MovieEntityMockWithColumnAnnotation::getCreationDateTime), now)
-                .set(field(MovieEntityMockWithColumnAnnotation::getUpdateDateTime), now)
+        final var expectedMovieDataset = Instancio.of(MovieEntityWithColumnAnnotation.class)
+                .set(field(MovieEntityWithColumnAnnotation::getId), null)
+                .set(field(MovieEntityWithColumnAnnotation::getCreationDateTime), now)
+                .set(field(MovieEntityWithColumnAnnotation::getUpdateDateTime), now)
                 .create();
 
         // Act
@@ -41,7 +41,7 @@ public class DatasetManagerTest {
 
         // Assert
         expectedMovieDataset.setId(1L);
-        final var actualMovieDataset = MovieEntityMockWithColumnAnnotation.findById(1L);
+        final var actualMovieDataset = MovieEntityWithColumnAnnotation.findById(1L);
         assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
     }
 
@@ -50,10 +50,10 @@ public class DatasetManagerTest {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
-        final var expectedMovieDataset = Instancio.of(MovieEntityMockWithoutColumnAnnotation.class)
-                .set(field(MovieEntityMockWithoutColumnAnnotation::getId), null)
-                .set(field(MovieEntityMockWithoutColumnAnnotation::getCreationDateTime), now)
-                .set(field(MovieEntityMockWithoutColumnAnnotation::getUpdateDateTime), now)
+        final var expectedMovieDataset = Instancio.of(MovieEntityWithoutColumnAnnotation.class)
+                .set(field(MovieEntityWithoutColumnAnnotation::getId), null)
+                .set(field(MovieEntityWithoutColumnAnnotation::getCreationDateTime), now)
+                .set(field(MovieEntityWithoutColumnAnnotation::getUpdateDateTime), now)
                 .create();
 
         // Act
@@ -61,7 +61,7 @@ public class DatasetManagerTest {
 
         // Assert
         expectedMovieDataset.setId(1L);
-        final var actualMovieDataset = MovieEntityMockWithoutColumnAnnotation.findById(1L);
+        final var actualMovieDataset = MovieEntityWithoutColumnAnnotation.findById(1L);
         assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
     }
 
@@ -70,10 +70,10 @@ public class DatasetManagerTest {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
-        final var expectedMovieDataset = Instancio.of(MovieEntityMockWithTransientAnnotation.class)
-                .set(field(MovieEntityMockWithTransientAnnotation::getId), null)
-                .set(field(MovieEntityMockWithTransientAnnotation::getCreationDateTime), now)
-                .set(field(MovieEntityMockWithTransientAnnotation::getUpdateDateTime), now)
+        final var expectedMovieDataset = Instancio.of(MovieEntityWithTransientAnnotation.class)
+                .set(field(MovieEntityWithTransientAnnotation::getId), null)
+                .set(field(MovieEntityWithTransientAnnotation::getCreationDateTime), now)
+                .set(field(MovieEntityWithTransientAnnotation::getUpdateDateTime), now)
                 .create();
 
         // Act
@@ -82,7 +82,7 @@ public class DatasetManagerTest {
         // Assert
         expectedMovieDataset.setId(1L);
         expectedMovieDataset.setGenre(null);
-        final var actualMovieDataset = MovieEntityMockWithTransientAnnotation.findById(1L);
+        final var actualMovieDataset = MovieEntityWithTransientAnnotation.findById(1L);
         assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
     }
 
@@ -91,10 +91,10 @@ public class DatasetManagerTest {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
-        final var expectedMovieDataset = Instancio.of(MovieEntityMockWithoutTableAnnotation.class)
-                .set(field(MovieEntityMockWithoutTableAnnotation::getId), null)
-                .set(field(MovieEntityMockWithoutTableAnnotation::getCreationDateTime), now)
-                .set(field(MovieEntityMockWithoutTableAnnotation::getUpdateDateTime), now)
+        final var expectedMovieDataset = Instancio.of(MovieEntityWithoutTableAnnotation.class)
+                .set(field(MovieEntityWithoutTableAnnotation::getId), null)
+                .set(field(MovieEntityWithoutTableAnnotation::getCreationDateTime), now)
+                .set(field(MovieEntityWithoutTableAnnotation::getUpdateDateTime), now)
                 .create();
 
         // Act
@@ -102,7 +102,7 @@ public class DatasetManagerTest {
 
         // Assert
         expectedMovieDataset.setId(1L);
-        final var actualMovieDataset = MovieEntityMockWithoutTableAnnotation.findById(1L);
+        final var actualMovieDataset = MovieEntityWithoutTableAnnotation.findById(1L);
         assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
     }
 
@@ -112,17 +112,17 @@ public class DatasetManagerTest {
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
         final long expectedMovieId = 1L;
-        final var expectedMovieDataset = Instancio.of(MovieEntityMockWithIdGeneratedBySequence.class)
-                .set(field(MovieEntityMockWithIdGeneratedBySequence::getId), null)
-                .set(field(MovieEntityMockWithIdGeneratedBySequence::getCreationDateTime), now)
-                .set(field(MovieEntityMockWithIdGeneratedBySequence::getUpdateDateTime), now)
+        final var expectedMovieDataset = Instancio.of(MovieEntityWithIdGeneratedBySequence.class)
+                .set(field(MovieEntityWithIdGeneratedBySequence::getId), null)
+                .set(field(MovieEntityWithIdGeneratedBySequence::getCreationDateTime), now)
+                .set(field(MovieEntityWithIdGeneratedBySequence::getUpdateDateTime), now)
                 .create();
 
         // Act
         datasetManager.create(expectedMovieDataset);
 
         // Assert
-        final var actualMovieDataset = MovieEntityMockWithIdGeneratedBySequence.findById(expectedMovieId);
+        final var actualMovieDataset = MovieEntityWithIdGeneratedBySequence.findById(expectedMovieId);
         expectedMovieDataset.setId(expectedMovieId);
         assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
     }
@@ -133,17 +133,38 @@ public class DatasetManagerTest {
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
         final long expectedMovieId = 1L;
-        final var expectedMovieDataset = Instancio.of(MovieEntityMockWithIdGeneratedByTable.class)
-                .set(field(MovieEntityMockWithIdGeneratedByTable::getId), null)
-                .set(field(MovieEntityMockWithIdGeneratedByTable::getCreationDateTime), now)
-                .set(field(MovieEntityMockWithIdGeneratedByTable::getUpdateDateTime), now)
+        final var expectedMovieDataset = Instancio.of(MovieEntityWithIdGeneratedByTable.class)
+                .set(field(MovieEntityWithIdGeneratedByTable::getId), null)
+                .set(field(MovieEntityWithIdGeneratedByTable::getCreationDateTime), now)
+                .set(field(MovieEntityWithIdGeneratedByTable::getUpdateDateTime), now)
                 .create();
 
         // Act
         datasetManager.create(expectedMovieDataset);
 
         // Assert
-        final var actualMovieDataset = MovieEntityMockWithIdGeneratedByTable.findById(expectedMovieId);
+        final var actualMovieDataset = MovieEntityWithIdGeneratedByTable.findById(expectedMovieId);
+        expectedMovieDataset.setId(expectedMovieId);
+        assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
+    }
+
+    @Test
+    void test_movieEntityWithIdGeneratedAsAuto() throws SQLException {
+
+        // Arrange
+        final var now = truncateToMicroseconds(LocalDateTime.now());
+        final long expectedMovieId = 1L;
+        final var expectedMovieDataset = Instancio.of(MovieEntityWithIdGeneratedAutomatically.class)
+                .set(field(MovieEntityWithIdGeneratedAutomatically::getId), null)
+                .set(field(MovieEntityWithIdGeneratedAutomatically::getCreationDateTime), now)
+                .set(field(MovieEntityWithIdGeneratedAutomatically::getUpdateDateTime), now)
+                .create();
+
+        // Act
+        datasetManager.create(expectedMovieDataset);
+
+        // Assert
+        final var actualMovieDataset = MovieEntityWithIdGeneratedAutomatically.findById(expectedMovieId);
         expectedMovieDataset.setId(expectedMovieId);
         assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
     }

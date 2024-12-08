@@ -9,22 +9,17 @@ import java.time.LocalDateTime;
 
 import static cleverton.heusner.shared.constant.validation.MovieValidation.ISAN_SIZE;
 import static cleverton.heusner.shared.constant.validation.MovieValidation.TITLE_MAX_SIZE;
-import static jakarta.persistence.GenerationType.TABLE;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
 @Entity
-@Table(name = "movie_entity_with_id_generated_by_table")
-public class MovieEntityMockWithIdGeneratedByTable extends PanacheEntityBase {
+@Table(name = "movie_entity_with_id_generated_by_sequence")
+public class MovieEntityWithIdGeneratedBySequence extends PanacheEntityBase {
 
     @Id
-    @GeneratedValue(strategy = TABLE, generator = "movie_id_generated_by_table")
-    @TableGenerator(
-            name = "movie_id_generated_by_table",
-            pkColumnName = "movie_entity_with_id_generated_by_table",
-            valueColumnName = "current_id",
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = SEQUENCE, generator = "seq_id_generator")
+    @SequenceGenerator(name = "seq_id_generator", allocationSize = 1)
     public Long id;
 
     @Column(name = "title", nullable = false, length = TITLE_MAX_SIZE)
