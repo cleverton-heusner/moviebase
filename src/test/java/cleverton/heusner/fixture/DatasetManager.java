@@ -11,9 +11,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class DatasetManager {
+import static jakarta.persistence.GenerationType.SEQUENCE;
+import static jakarta.persistence.GenerationType.TABLE;
 
-    private static final String SEQUENCE = "SEQUENCE";
+public class DatasetManager {
 
     private final DataSource dataSource;
 
@@ -24,8 +25,6 @@ public class DatasetManager {
     public final void create(final Object... entities) throws SQLException {
         try (final Connection connection = dataSource.getConnection()) {
             try (final PreparedStatement statement = connection.prepareStatement(createSql(entities))) {
-
-
                 Arrays.stream(entities)
                         .forEach(entity -> populateStatement(statement, entity, connection));
                 statement.executeBatch();
@@ -96,6 +95,7 @@ public class DatasetManager {
                 .filter(field ->
                         isFieldAnnotatedWithColumn(field) ||
                         isIdFieldGeneratedBySequence(field) ||
+                        isIdFieldGeneratedByTable(field) ||
                         isFieldNotAnnotated(field)
                 );
     }
@@ -105,11 +105,23 @@ public class DatasetManager {
     }
 
     private boolean isIdFieldGeneratedBySequence(final Field field) {
-        return field.isAnnotationPresent(Id.class) &&
-                SEQUENCE.equals(field.getAnnotation(GeneratedValue.class)
-                        .strategy()
-                        .name()
-                );
+        return field.isAnnotationPresent(GeneratedValue.class) &&
+                SEQUENCE.name()
+                        .equals(
+                                field.getAnnotation(GeneratedValue.class)
+                                        .strategy()
+                                        .name()
+                        );
+    }
+
+    private boolean isIdFieldGeneratedByTable(final Field field) {
+        return field.isAnnotationPresent(GeneratedValue.class) &&
+                TABLE.name()
+                        .equals(
+                                field.getAnnotation(GeneratedValue.class)
+                                        .strategy()
+                                        .name()
+                        );
     }
 
     private boolean isFieldNotAnnotated(final Field field) {
@@ -172,9 +184,40 @@ public class DatasetManager {
 
     private long generateSequenceForIdField(final Field field, final Connection connection) {
         if (isIdFieldGeneratedBySequence(field)) {
-            final String sequenceGenerator = field.getAnnotation(GeneratedValue.class).generator();
+            final String idGeneratorSequence = field.getAnnotation(GeneratedValue.class)
+                    .generator();
             try (final Statement statement = connection.createStatement()) {
-                final ResultSet resultSet = statement.executeQuery("SELECT nextval('" + sequenceGenerator + "')");
+                final ResultSet resultSet = statement.executeQuery("SELECT nextval('" + idGeneratorSequence + "')");
+                if (resultSet.next()) {
+                    return resultSet.getLong(1);
+                }
+            } catch (final SQLException e) {
+                throw new RuntimeException(
+                        String.format("Failed to generate ID for field %s. Error: ", field.getName()),
+                        e
+                );
+            }
+        }
+        else if (isIdFieldGeneratedByTable(field)) {
+            final String idGeneratorTable = field.getAnnotation(GeneratedValue.class).generator();
+            final String entityPkColumnName = field.getAnnotation(TableGenerator.class).pkColumnName();
+            final String currentIdColumnName = field.getAnnotation(TableGenerator.class).valueColumnName();
+            final String query = """
+            UPDATE %s
+             SET %s = %s + 1
+             WHERE %s = '%s'
+             RETURNING %s
+            """.formatted(
+                    idGeneratorTable,
+                    currentIdColumnName,
+                    currentIdColumnName,
+                    entityPkColumnName,
+                    entityPkColumnName,
+                    currentIdColumnName
+            );
+
+            try (final Statement statement = connection.createStatement()) {
+                final ResultSet resultSet = statement.executeQuery(query);
                 if (resultSet.next()) {
                     return resultSet.getLong(1);
                 }

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 import static cleverton.heusner.shared.constant.validation.MovieValidation.ISAN_SIZE;
 import static cleverton.heusner.shared.constant.validation.MovieValidation.TITLE_MAX_SIZE;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -17,7 +18,7 @@ import static cleverton.heusner.shared.constant.validation.MovieValidation.TITLE
 public class MovieEntityMockWithTransientAnnotation extends PanacheEntityBase {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     public Long id;
 
     @Column(name = "title", nullable = false, length = TITLE_MAX_SIZE)

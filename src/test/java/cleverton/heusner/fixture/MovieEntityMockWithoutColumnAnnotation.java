@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @EqualsAndHashCode(callSuper = false)
 @Data
 @Entity
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 public class MovieEntityMockWithoutColumnAnnotation extends PanacheEntityBase {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     public Long id;
 
     private String title;

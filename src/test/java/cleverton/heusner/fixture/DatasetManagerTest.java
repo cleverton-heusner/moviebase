@@ -127,6 +127,27 @@ public class DatasetManagerTest {
         assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
     }
 
+    @Test
+    void test_movieEntityWithIdGeneratedByTable() throws SQLException {
+
+        // Arrange
+        final var now = truncateToMicroseconds(LocalDateTime.now());
+        final long expectedMovieId = 1L;
+        final var expectedMovieDataset = Instancio.of(MovieEntityMockWithIdGeneratedByTable.class)
+                .set(field(MovieEntityMockWithIdGeneratedByTable::getId), null)
+                .set(field(MovieEntityMockWithIdGeneratedByTable::getCreationDateTime), now)
+                .set(field(MovieEntityMockWithIdGeneratedByTable::getUpdateDateTime), now)
+                .create();
+
+        // Act
+        datasetManager.create(expectedMovieDataset);
+
+        // Assert
+        final var actualMovieDataset = MovieEntityMockWithIdGeneratedByTable.findById(expectedMovieId);
+        expectedMovieDataset.setId(expectedMovieId);
+        assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
+    }
+
     private LocalDateTime truncateToMicroseconds(final LocalDateTime localDateTime) {
         return localDateTime.truncatedTo(ChronoUnit.MICROS);
     }
