@@ -101,7 +101,7 @@ public class DatasetManager {
     }
 
     private boolean isFieldAnnotatedWithColumn(final Field field) {
-        return field.isAnnotationPresent(Column.class);
+        return field.isAnnotationPresent(Column.class) && !field.isAnnotationPresent(Id.class);
     }
 
     private boolean isIdGeneratedBySequence(final Field field) {

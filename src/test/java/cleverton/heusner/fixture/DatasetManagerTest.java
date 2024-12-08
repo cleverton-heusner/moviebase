@@ -46,6 +46,26 @@ public class DatasetManagerTest {
     }
 
     @Test
+    void test_movieEntityWithColumnAnnotationInId() throws SQLException {
+
+        // Arrange
+        final var now = truncateToMicroseconds(LocalDateTime.now());
+        final var expectedMovieDataset = Instancio.of(MovieEntityWithColumnAnnotationInId.class)
+                .set(field(MovieEntityWithColumnAnnotationInId::getId), null)
+                .set(field(MovieEntityWithColumnAnnotationInId::getCreationDateTime), now)
+                .set(field(MovieEntityWithColumnAnnotationInId::getUpdateDateTime), now)
+                .create();
+
+        // Act
+        datasetManager.create(expectedMovieDataset);
+
+        // Assert
+        expectedMovieDataset.setId(1L);
+        final var actualMovieDataset = MovieEntityWithColumnAnnotationInId.findById(1L);
+        assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
+    }
+
+    @Test
     void test_movieEntityWithoutColumnAnnotation() throws SQLException {
 
         // Arrange
