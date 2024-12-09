@@ -42,7 +42,7 @@ public class DatasetCreator {
                 stmt.executeBatch();
             }
         } catch (final SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatasetCreationException(e);
         }
     }
 
@@ -72,7 +72,7 @@ public class DatasetCreator {
                         statement.setObject(++i, id > 0 ? id : getFieldValue(persistentField, entity));
                     }
                     catch (final SQLException e) {
-                        throw new RuntimeException(String.format(
+                        throw new DatasetCreationException(String.format(
                                 "Failed to set value for field '%s' in SQL statement. Error: ",
                                 persistentField.getName()
                         ), e);
@@ -81,7 +81,7 @@ public class DatasetCreator {
         try {
             statement.addBatch();
         } catch (final SQLException e) {
-            throw new RuntimeException("Failed to add batch to statement. Error: ", e);
+            throw new DatasetCreationException("Failed to add batch to statement. Error: ", e);
         }
     }
 
@@ -90,7 +90,7 @@ public class DatasetCreator {
         try {
             return field.get(getFieldParent(field, entity));
         } catch (final IllegalAccessException e) {
-            throw new RuntimeException(String.format(
+            throw new DatasetCreationException(String.format(
                     "Failed to access value from field %s. Error: ",
                     field.getName()
             ), e);
@@ -105,7 +105,7 @@ public class DatasetCreator {
         final Field embeddedField = Arrays.stream(currentParentField.getClass().getDeclaredFields())
                 .filter(f -> f.getType().equals(field.getDeclaringClass()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new DatasetCreationException(
                         "No matching field found for: " + field.getDeclaringClass())
                 );
 
@@ -115,7 +115,7 @@ public class DatasetCreator {
             embeddedField.set(currentParentField, nextParentField);
             return getFieldParent(field, nextParentField);
         } catch (final IllegalAccessException e) {
-            throw new RuntimeException("Failed to initialize parent field.", e);
+            throw new DatasetCreationException("Failed to initialize parent field.", e);
         }
     }
 
@@ -126,7 +126,7 @@ public class DatasetCreator {
                     field.getType().getDeclaredConstructor().newInstance() :
                     field.get(currentParentField);
         } catch (final ReflectiveOperationException e) {
-            throw new RuntimeException("Failed to access parent field.", e);
+            throw new DatasetCreationException("Failed to access parent field.", e);
         }
     }
 }
