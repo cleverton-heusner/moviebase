@@ -1,12 +1,12 @@
-package cleverton.heusner.fixture;
+package cleverton.heusner.fixture.dataset.tests;
 
+import cleverton.heusner.fixture.dataset.manager.DatasetManager;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -26,7 +26,7 @@ public class DatasetManagerTest {
     }
 
     @Test
-    void test_movieEntityWithColumnAnnotation() throws SQLException {
+    void test_movieEntityWithColumnAnnotation() {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
@@ -46,7 +46,7 @@ public class DatasetManagerTest {
     }
 
     @Test
-    void test_movieEntityWithColumnAnnotationInId() throws SQLException {
+    void test_movieEntityWithColumnAnnotationInId() {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
@@ -66,7 +66,7 @@ public class DatasetManagerTest {
     }
 
     @Test
-    void test_movieEntityWithoutColumnAnnotation() throws SQLException {
+    void test_movieEntityWithoutColumnAnnotation() {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
@@ -86,7 +86,7 @@ public class DatasetManagerTest {
     }
 
     @Test
-    void test_movieEntityWithTransientAnnotation() throws SQLException {
+    void test_movieEntityWithTransientAnnotation() {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
@@ -107,7 +107,7 @@ public class DatasetManagerTest {
     }
 
     @Test
-    void test_movieEntityWithoutTableAnnotation() throws SQLException {
+    void test_movieEntityWithoutTableAnnotation() {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
@@ -127,7 +127,7 @@ public class DatasetManagerTest {
     }
 
     @Test
-    void test_movieEntityWithIdGeneratedBySequence() throws SQLException {
+    void test_movieEntityWithIdGeneratedBySequence() {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
@@ -148,7 +148,7 @@ public class DatasetManagerTest {
     }
 
     @Test
-    void test_movieEntityWithIdGeneratedByTable() throws SQLException {
+    void test_movieEntityWithIdGeneratedByTable() {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
@@ -169,7 +169,7 @@ public class DatasetManagerTest {
     }
 
     @Test
-    void test_movieEntityWithIdGeneratedAsAuto() throws SQLException {
+    void test_movieEntityWithIdGeneratedAsAuto() {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());

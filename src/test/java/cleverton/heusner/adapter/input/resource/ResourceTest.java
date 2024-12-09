@@ -4,14 +4,13 @@ import cleverton.heusner.adapter.input.dto.request.MovieCreationRequest;
 import cleverton.heusner.adapter.input.dto.response.MovieResponse;
 import cleverton.heusner.adapter.input.exception.ErrorResponse;
 import cleverton.heusner.adapter.output.entity.MovieEntity;
-import cleverton.heusner.fixture.DatasetManager;
+import cleverton.heusner.fixture.dataset.manager.DatasetManager;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import jakarta.inject.Inject;
 import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.AfterEach;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -32,7 +31,7 @@ public class ResourceTest {
         datasetManager.clean(MovieEntity.class);
     }
 
-    protected void insertMoviesDataset(final MovieEntity...movies) throws SQLException {
+    protected void insertMoviesDataset(final MovieEntity...movies) {
         datasetManager.create(movies);
     }
 

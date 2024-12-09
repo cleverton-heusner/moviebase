@@ -1,4 +1,4 @@
-package cleverton.heusner.fixture;
+package cleverton.heusner.fixture.dataset.tests;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
@@ -14,8 +14,8 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @Entity
-@Table(name = "movie_entity_with_column_annotation")
-public class MovieEntityWithColumnAnnotation extends PanacheEntityBase {
+@Table(name = "movie_entity_with_transient_annotation")
+public class MovieEntityWithTransientAnnotation extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -26,6 +26,9 @@ public class MovieEntityWithColumnAnnotation extends PanacheEntityBase {
 
     @Column(name = "isan", nullable = false, length = ISAN_SIZE, unique = true)
     private String isan;
+
+    @Transient
+    private String genre;
 
     @Column(name = "release_year")
     private Integer releaseYear;

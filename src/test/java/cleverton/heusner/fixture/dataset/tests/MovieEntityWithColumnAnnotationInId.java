@@ -1,4 +1,4 @@
-package cleverton.heusner.fixture;
+package cleverton.heusner.fixture.dataset.tests;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
@@ -9,22 +9,17 @@ import java.time.LocalDateTime;
 
 import static cleverton.heusner.shared.constant.validation.MovieValidation.ISAN_SIZE;
 import static cleverton.heusner.shared.constant.validation.MovieValidation.TITLE_MAX_SIZE;
-import static jakarta.persistence.GenerationType.TABLE;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
 @Entity
-@Table(name = "movie_entity_with_id_generated_by_table")
-public class MovieEntityWithIdGeneratedByTable extends PanacheEntityBase {
+@Table(name = "movie_entity_with_column_annotation_in_id")
+public class MovieEntityWithColumnAnnotationInId extends PanacheEntityBase {
 
     @Id
-    @GeneratedValue(strategy = TABLE, generator = "tab_id_generator")
-    @TableGenerator(
-            name = "tab_id_generator",
-            pkColumnName = "movie_entity_with_id_generated_by_table",
-            valueColumnName = "current_id",
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id")
     public Long id;
 
     @Column(name = "title", nullable = false, length = TITLE_MAX_SIZE)
