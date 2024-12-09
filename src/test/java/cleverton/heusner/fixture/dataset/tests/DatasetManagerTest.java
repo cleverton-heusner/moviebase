@@ -1,8 +1,10 @@
 package cleverton.heusner.fixture.dataset.tests;
 
+import cleverton.heusner.fixture.dataset.idgenerator.IdGenerationException;
 import cleverton.heusner.fixture.dataset.manager.DatasetManager;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import org.hibernate.exception.ConstraintViolationException;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.instancio.Select.field;
 
@@ -177,7 +180,7 @@ public class DatasetManagerTest {
     }
 
     @Test
-    void test_movieEntityWithIdGeneratedAsAuto() {
+    void test_movieEntityWithIdGeneratedAutomatically() {
 
         // Arrange
         final var now = truncateToMicroseconds(LocalDateTime.now());
@@ -195,6 +198,24 @@ public class DatasetManagerTest {
         final var actualMovieDataset = MovieEntityWithIdGeneratedAutomatically.findById(expectedMovieId);
         expectedMovieDataset.setId(expectedMovieId);
         assertThat(actualMovieDataset).isEqualTo(expectedMovieDataset);
+    }
+
+    @Test
+    void test_movieEntityWithIdGeneratedAutomaticallyButWithoutGeneratorProvided() {
+
+        // Arrange
+        final var now = truncateToMicroseconds(LocalDateTime.now());
+        final var expectedMovieDataset = Instancio.of(MovieEntityWithIdGeneratedAutomaticallyButWithoutGeneratorProvided.class)
+                .set(field(MovieEntityWithIdGeneratedAutomaticallyButWithoutGeneratorProvided::getId), null)
+                .set(field(MovieEntityWithIdGeneratedAutomaticallyButWithoutGeneratorProvided::getCreationDateTime), now)
+                .set(field(MovieEntityWithIdGeneratedAutomaticallyButWithoutGeneratorProvided::getUpdateDateTime), now)
+                .create();
+
+        // Act & Assert
+        assertThatThrownBy(() -> datasetManager.create(expectedMovieDataset))
+                .isInstanceOf(IdGenerationException.class)
+                .hasMessage("Generator not provided for " +
+                        "table movie_entity_with_id_generated_automatically_but_without_generator_provided.");
     }
 
     private LocalDateTime truncateToMicroseconds(final LocalDateTime localDateTime) {

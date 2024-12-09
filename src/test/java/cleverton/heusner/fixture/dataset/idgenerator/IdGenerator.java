@@ -12,6 +12,8 @@ import java.util.Optional;
 @Dependent
 public class IdGenerator {
 
+    private static final int ID_COLUMN_INDEX = 1;
+
     private final IdGenerationQuerySelector idGenerationQuerySelector;
 
     public IdGenerator(final IdGenerationQuerySelector idGenerationQuerySelector) {
@@ -28,7 +30,7 @@ public class IdGenerator {
         try (final Statement statement = connection.createStatement()) {
             final ResultSet resultSet = statement.executeQuery(query);
             if (resultSet.next()) {
-                return resultSet.getLong(1);
+                return resultSet.getLong(ID_COLUMN_INDEX);
             }
         } catch (final SQLException e) {
             throw new IdGenerationException(

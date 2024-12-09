@@ -62,14 +62,14 @@ public class DatasetCreator {
                 .collect(Collectors.joining(PARAMETERS_SEPARATOR));
     }
 
-    private void populateStatement(final PreparedStatement statement, final Object entity, final Connection connection) {
+    private void populateStatement(final PreparedStatement stmt, final Object entity, final Connection conn) {
         final List<Field> persistentFields = entityMetadataReader.getPersistentFields(entity);
         IntStream.range(0, persistentFields.size())
                 .forEach(i -> {
                     final Field persistentField = persistentFields.get(i);
-                    final long id = idGenerator.generate(persistentField, connection);
+                    final long id = idGenerator.generate(persistentField, conn);
                     try {
-                        statement.setObject(++i, id > 0 ? id : getFieldValue(persistentField, entity));
+                        stmt.setObject(++i, id > 0 ? id : getFieldValue(persistentField, entity));
                     }
                     catch (final SQLException e) {
                         throw new DatasetCreationException(String.format(
@@ -79,7 +79,7 @@ public class DatasetCreator {
                     }
                 });
         try {
-            statement.addBatch();
+            stmt.addBatch();
         } catch (final SQLException e) {
             throw new DatasetCreationException("Failed to add batch to statement. Error: ", e);
         }

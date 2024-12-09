@@ -16,6 +16,10 @@ public class EntityMetadataReader {
         return getTableName(getEntitiesClass(entities));
     }
 
+    public String getTableName(final Field field) {
+        return getTableName(field.getDeclaringClass());
+    }
+
     public String getTableName(final Class<?> entityClass) {
         return entityClass.isAnnotationPresent(Table.class) ?
                 entityClass.getAnnotation(Table.class).name() :
