@@ -1,5 +1,6 @@
 package cleverton.heusner.fixture.dataset.idgenerator;
 
+import cleverton.heusner.fixture.dataset.shared.EntityMetadataReader;
 import jakarta.enterprise.context.Dependent;
 
 import java.lang.reflect.Field;
@@ -15,14 +16,17 @@ public class IdGenerator {
     private static final int ID_COLUMN_INDEX = 1;
 
     private final IdGenerationQuerySelector idGenerationQuerySelector;
+    private final EntityMetadataReader entityMetadataReader;
 
-    public IdGenerator(final IdGenerationQuerySelector idGenerationQuerySelector) {
+    public IdGenerator(final IdGenerationQuerySelector idGenerationQuerySelector,
+                       final EntityMetadataReader entityMetadataReader) {
         this.idGenerationQuerySelector = idGenerationQuerySelector;
+        this.entityMetadataReader = entityMetadataReader;
     }
 
-    public long generate(final Field field, final Connection connection) {
-        final Optional<String> queryOptional = idGenerationQuerySelector.selectQuery(field);
-        return queryOptional.map(query -> generateId(connection, query, field.getName()))
+    public long generate(final Field idField, final Connection connection) {
+        final Optional<String> queryOptional = idGenerationQuerySelector.selectQuery(idField);
+        return queryOptional.map(query -> generateId(connection, query, idField.getName()))
                 .orElse(0L);
     }
 

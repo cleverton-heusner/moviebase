@@ -39,7 +39,19 @@ public class EntityMetadataReader {
         return getPersistentFields(getEntitiesClass(entities));
     }
 
-    public List<Field> getPersistentFields(final Class<?> entityClass) {
+    public String getGenerator(final Field idField) {
+        return idField.getAnnotation(GeneratedValue.class).generator();
+    }
+
+    public TableGenerator getTableGenerator(final Field idField) {
+        return idField.getAnnotation(TableGenerator.class);
+    }
+
+    public String getGeneratorStrategyName(final Field idField) {
+        return idField.getAnnotation(GeneratedValue.class).strategy().name();
+    }
+
+    private List<Field> getPersistentFields(final Class<?> entityClass) {
         return Stream.concat(getChildFields(entityClass), getDescendantFields(entityClass))
                 .toList();
     }
@@ -80,7 +92,7 @@ public class EntityMetadataReader {
         return false;
     }
 
-    public Stream<Field> getDescendantFields(final Class<?> entityClass) {
+    private Stream<Field> getDescendantFields(final Class<?> entityClass) {
         return Arrays.stream(entityClass.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Embedded.class))
                 .map(field -> getPersistentFields(field.getType()))
