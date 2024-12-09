@@ -21,8 +21,16 @@ public class DatasetManagerTest {
 
     @AfterEach
     void tearDown() {
-        datasetManager.clean(MovieEntityWithColumnAnnotation.class);
-        datasetManager.clean(MovieEntityWithoutColumnAnnotation.class);
+        datasetManager.clean(
+                MovieEntityWithColumnAnnotation.class,
+                MovieEntityWithColumnAnnotationInId.class,
+                MovieEntityWithoutColumnAnnotation.class,
+                MovieEntityWithTransientAnnotation.class,
+                MovieEntityWithoutTableAnnotation.class,
+                MovieEntityWithIdGeneratedBySequence.class,
+                MovieEntityWithIdGeneratedByTable.class,
+                MovieEntityWithIdGeneratedAutomatically.class
+        );
     }
 
     @Test

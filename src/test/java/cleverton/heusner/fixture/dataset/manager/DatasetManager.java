@@ -18,7 +18,7 @@ public class DatasetManager {
         datasetCreator.create(entities);
     }
 
-    public void clean(final Class<?> entityClass) {
-        datasetCleaner.clean(entityClass);
+    public void clean(final Class<?>... entityClasses) {
+        datasetCleaner.clean(entityClasses);
     }
 }
